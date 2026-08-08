@@ -1,0 +1,27 @@
+{
+  "name": "rigo-agi-orgfiles",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "bun --hot index.ts",
+    "ingest": "bun run src/ingest.ts",
+    "chunk": "bun run src/chunk.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/node": "^26.1.2",
+    "tsx": "^4.23.8"
+  },
+  "peerDependencies": {
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "@lmnr-ai/lmnr": "^0.8.40",
+    "ai": "^7.0.52",
+    "dotenv": "^17.4.2",
+    "ollama-ai-provider-v2": "^4.0.1",
+    "zod": "^4.4.3"
+  }
+}
