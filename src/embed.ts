@@ -1,4 +1,4 @@
-import { embed, embedMany } from "ai";
+import { embedMany } from "ai";
 import { ollama } from "ollama-ai-provider-v2";
 import type { Chunk } from "./chunk";
 
