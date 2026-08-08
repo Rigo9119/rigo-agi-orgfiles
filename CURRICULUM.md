@@ -58,9 +58,9 @@ rigo-agi-orgfiles/
 3. **Embeddings** - pull `nomic-embed-text`, add `ollama-ai-provider-v2`, generate vectors via AI SDK's `embedMany`.
    Status: done. `src/embed.ts` exports `EmbbededChunk` (`Chunk & { embedding: number[] }`, note: typo'd name, harmless) and `embedChunks(chunks)`, batching via `embedMany`. Verified against all 257 real chunks - 768-dim vectors, ~6.7s total, fully local via Ollama. Removed unused `@ai-sdk/openai` dependency (was installed by mistake following generic Vercel AI SDK docs).
 4. **Vector store** - persist `{vector, text, metadata}` to JSON via `Bun.write`, implement cosine similarity by hand.
-   Status: in progress (current lesson).
+   Status: done. `src/store.ts` exports `saveStore`/`loadStore` (via `Bun.write`/`Bun.file().json()`) and `dotProduct`/`magnitud`/`cosineSimilarity`. Verified against all 257 real embedded chunks: save/load round-trips exactly, self-similarity = 1, cross-topic (finance vs. aws) similarity = 0.40.
 5. **Retrieval** - embed the query, rank chunks by cosine similarity, return top-k with metadata.
-   Status: pending.
+   Status: in progress (current lesson).
 6. **Evals (lmnr)** - build an eval dataset grounded in real vault content, and the lmnr evaluate() scoring harness, BEFORE the tools/agent exist.
    This defines target behavior (expected facts/citations per question) independently of any implementation, so the eval bar doesn't quietly bend to match whatever gets built - same instinct as test-driven development, applied to agent behavior.
    Privacy decision (self-host vs. cloud Laminar) must be made before this lesson sends any data out.
