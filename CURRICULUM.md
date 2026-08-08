@@ -11,7 +11,7 @@ Claude reviews.
 - Orchestration: Vercel AI SDK (`ai`).
 - Local models: Ollama (`ollama-ai-provider-v2`).
   Chat models available: `llama3.1:8b`, `qwen2.5-coder:7b`, `qwen2.5-coder:14b`, `gemma3:4b`.
-  Embedding model: `nomic-embed-text` (to be pulled).
+  Embedding model: `bge-m3` (1024-dim, multilingual - switched from `nomic-embed-text` after finding weak cross-lingual retrieval on this bilingual ES/EN vault, see Lesson 5).
 - Vector store (v1): in-memory array + JSON file persistence, cosine similarity computed by hand.
 - Evals: lmnr (Laminar).
   Self-hosted vs. cloud decision pending - vault contains personal/financial notes (`02_areas/finance`, `06_journal`).
@@ -60,7 +60,8 @@ rigo-agi-orgfiles/
 4. **Vector store** - persist `{vector, text, metadata}` to JSON via `Bun.write`, implement cosine similarity by hand.
    Status: done. `src/store.ts` exports `saveStore`/`loadStore` (via `Bun.write`/`Bun.file().json()`) and `dotProduct`/`magnitud`/`cosineSimilarity`. Verified against all 257 real embedded chunks: save/load round-trips exactly, self-similarity = 1, cross-topic (finance vs. aws) similarity = 0.40.
 5. **Retrieval** - embed the query, rank chunks by cosine similarity, return top-k with metadata.
-   Status: in progress (current lesson).
+   Status: done. `src/retrieve.ts` exports `RetrieveResult` (`EmbeddedChunk & { score: number }`) and `retrieve(query, chunks, topK=5)`.
+   **Resolved**: `nomic-embed-text` was weakly multilingual (found via manual testing - ~0.2 cosine similarity gap between English/Spanish phrasings of the same question against a Spanish doc, sometimes letting an unrelated English doc outrank the correct one). Switched embedding model to `bge-m3` (1024-dim, vs. `nomic-embed-text`'s 768-dim) in both `src/embed.ts` and `src/retrieve.ts`. Re-verified: English and Spanish phrasings of the same question now score within ~0.01 of each other and both correctly surface the right document in all top-3 results. Trade-off: embedding all 257 chunks now takes ~27s instead of ~7s. `nomic-embed-text` can be removed from Ollama if disk space matters (`ollama rm nomic-embed-text`) - not done automatically, left as a manual cleanup step.
 6. **Evals (lmnr)** - build an eval dataset grounded in real vault content, and the lmnr evaluate() scoring harness, BEFORE the tools/agent exist.
    This defines target behavior (expected facts/citations per question) independently of any implementation, so the eval bar doesn't quietly bend to match whatever gets built - same instinct as test-driven development, applied to agent behavior.
    Privacy decision (self-host vs. cloud Laminar) must be made before this lesson sends any data out.

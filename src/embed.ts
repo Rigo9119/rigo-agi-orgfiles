@@ -2,11 +2,11 @@ import { embed, embedMany } from "ai";
 import { ollama } from "ollama-ai-provider-v2";
 import type { Chunk } from "./chunk";
 
-export type EmbbededChunk = Chunk & { embedding: number[] };
+export type EmbeddedChunk = Chunk & { embedding: number[] };
 
-const model = ollama.embedding("nomic-embed-text");
+const model = ollama.embedding("bge-m3");
 
-export async function embedChunks(chunks: Chunk[]): Promise<EmbbededChunk[]> {
+export async function embedChunks(chunks: Chunk[]): Promise<EmbeddedChunk[]> {
   const result = await embedMany({ model, values: chunks.map((chunk) => chunk.text) });
 
   return chunks.map((chunk, index) => {

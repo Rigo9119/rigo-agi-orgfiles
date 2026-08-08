@@ -1,10 +1,10 @@
-import type { EmbbededChunk } from "./embed";
+import type { EmbeddedChunk } from "./embed";
 
-export async function saveStore(chunks: EmbbededChunk[], path: string): Promise<void> {
+export async function saveStore(chunks: EmbeddedChunk[], path: string): Promise<void> {
   await Bun.write(path, JSON.stringify(chunks));
 }
 
-export async function loadStore(path: string): Promise<EmbbededChunk[]> {
+export async function loadStore(path: string): Promise<EmbeddedChunk[]> {
   return Bun.file(path).json();
 }
 
